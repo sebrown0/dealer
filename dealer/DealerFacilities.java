@@ -1,7 +1,7 @@
 /**
  * 
  */
-package car_dealership.dealer;
+package dealer;
 
 /**
  * @author Steve Brown

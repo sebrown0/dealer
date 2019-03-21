@@ -1,6 +1,6 @@
-package car_dealership.main_dealer;
+package main_dealer;
 
-import car_dealership.dealer.DealerFacilities;
+import dealer.DealerFacilities;
 
 /**
  * @author Steve Brown

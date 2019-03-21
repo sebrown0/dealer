@@ -1,9 +1,9 @@
 /**
  * 
  */
-package car_dealership.franchise;
+package franchise;
 
-import car_dealership.dealer.CarDealer;
+import dealer.CarDealer;
 
 /**
  * @author Steve Brown

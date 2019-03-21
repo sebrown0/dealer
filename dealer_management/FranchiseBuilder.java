@@ -1,10 +1,10 @@
-package car_dealership.dealer_management;
+package dealer_management;
 
 import java.util.List;
 
-import car_dealership.dealer.CarDealer;
-import car_dealership.dealer_working_day.DealerWorkingDay;
-import car_dealership.franchise.FranchiseDealer;
+import dealer.CarDealer;
+import dealer_working_day.DealerWorkingDay;
+import franchise.FranchiseDealer;
 
 /**
  * @author Steve Brown
@@ -13,6 +13,7 @@ import car_dealership.franchise.FranchiseDealer;
  */
 public interface FranchiseBuilder extends DealerBuilder {
 
+	@Override
 	default void build(List<CarDealer> dealerList, String name, DealerWorkingDay openingHours) {
 //		System.out.println("Created Franchise Dealer: " + name);	// TODO - Log
 		FranchiseDealer franchise = null;

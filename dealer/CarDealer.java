@@ -1,16 +1,12 @@
-package car_dealership.dealer;
+package dealer;
 
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
-import car_dealership.dealer_working_day.DealerWorkingDay;
-import car_dealership.dealer_working_day.OpeningHours;
-import car_dealership.franchise.FranchiseDealer;
-import car_dealership.main_dealer.MainDealer;
+import dealer_working_day.DealerWorkingDay;
+import dealer_working_day.OpeningHours;
+import franchise.FranchiseDealer;
+import main_dealer.MainDealer;
 import database.DatabaseDAO;
 import depts.Department;
-import heartbeat.HeartBeat;
 
 /*
  *  @author Steve Brown.

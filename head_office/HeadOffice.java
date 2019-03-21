@@ -1,15 +1,15 @@
 /**
  * 
  */
-package car_dealership.head_office;
+package head_office;
 
 import java.util.concurrent.TimeUnit;
 
-import car_dealership.dealer_management.DealerManagement;
-import car_dealership.dealer_management.FranchiseBuilder;
-import car_dealership.dealer_management.MainDealerBuilder;
-import car_dealership.dealer_working_day.FranchiseDealerWorkingDay;
-import car_dealership.dealer_working_day.MainDealerWorkingDay;
+import dealer_management.DealerManagement;
+import dealer_management.FranchiseBuilder;
+import dealer_management.MainDealerBuilder;
+import dealer_working_day.FranchiseDealerWorkingDay;
+import dealer_working_day.MainDealerWorkingDay;
 import database.DatabaseDAO;
 import database.MySqlDB;
 import depts.Department;

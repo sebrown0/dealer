@@ -1,4 +1,4 @@
-package car_dealership.dealer;
+package dealer;
 
 /*
  *  TODO - Change

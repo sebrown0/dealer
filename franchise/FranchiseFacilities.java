@@ -1,6 +1,6 @@
-package car_dealership.franchise;
+package franchise;
 
-import car_dealership.dealer.DealerFacilities;
+import dealer.DealerFacilities;
 
 // TODO - Add method.
 public interface FranchiseFacilities extends DealerFacilities {

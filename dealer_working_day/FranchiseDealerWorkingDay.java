@@ -1,7 +1,7 @@
 /**
  * 
  */
-package car_dealership.dealer_working_day;
+package dealer_working_day;
 
 import time.ImmutableTime;
 

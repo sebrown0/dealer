@@ -1,11 +1,11 @@
 /**
  * 
  */
-package car_dealership.franchise;
+package franchise;
 
 import java.util.concurrent.TimeUnit;
 
-import car_dealership.dealer_working_day.OpeningHours;
+import dealer_working_day.OpeningHours;
 
 /**
  * @author Steve Brown

@@ -1,14 +1,14 @@
 /**
  * 
  */
-package car_dealership.dealer_management;
+package dealer_management;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import car_dealership.dealer.CarDealer;
-import car_dealership.dealer_working_day.DealerWorkingDay;
-import car_dealership.dealer_working_day.OpeningHours;
+import dealer.CarDealer;
+import dealer_working_day.DealerWorkingDay;
+import dealer_working_day.OpeningHours;
 import depts.Department;
 import observer.Observer;
 import task_scheduler.TaskScheduler;

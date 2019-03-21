@@ -1,4 +1,4 @@
-package car_dealership.dealer_working_day;
+package dealer_working_day;
 
 import time.ImmutableTime;
 
@@ -11,4 +11,5 @@ public interface SetWorkingDay {
 	 *  Give a dealer new opening and closing hours.
 	 */
 	void setWorkingDay(ImmutableTime openingTime, ImmutableTime closingTime);
+	
 }
