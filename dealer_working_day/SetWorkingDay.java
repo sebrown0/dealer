@@ -11,5 +11,4 @@ public interface SetWorkingDay {
 	 *  Give a dealer new opening and closing hours.
 	 */
 	void setWorkingDay(ImmutableTime openingTime, ImmutableTime closingTime);
-	
 }

@@ -11,12 +11,15 @@ import dealer_working_day.DealerWorkingDay;
 import dealer_working_day.OpeningHours;
 import depts.Department;
 import observer.Observer;
-import task_scheduler.TaskScheduler;
+import observer.ObserverMessage;
+import task_scheduler.TaskManager;
 import tasks.CloseDealershipInjector;
 import tasks.OpenDealershipInjector;
+import tasks.ScheduledTime;
 import tasks.TaskConsumer;
 import tasks.TaskInjector;
-import timer.Timer;
+import tasks.TypeOfTask;
+import timer.Timers;
 
 /**
  * @author Steve Brown
@@ -25,17 +28,20 @@ import timer.Timer;
  *  	1. Creates them.
  *   	2. Opens them.
  *   	3. Closes them.
+ *   
+ *   If HeadOffice closes then all open dealers are told to close.
+ *   This means that HO should be running continuously during opening hours. 
  */
 public class DealerManagement implements Observer{
 
-	private Timer timer = null; 								// Supplied by HeadOffice.
-	private TaskScheduler taskScheduler;						// Supplied by HeadOffice.
+	private Timers timer = null; 								// Supplied by HeadOffice.
+	private TaskManager taskScheduler;						// Supplied by HeadOffice.
 	private Department department;								// Supplied by HeadOffice.
 	private List<CarDealer> dealerList = new ArrayList<>();		// A list of all dealers.
 	private int firstOpeningTime = Integer.MAX_VALUE;			// The time that the first dealer to opens.
 	private int lastClosingTime = Integer.MIN_VALUE;			// The time that the first dealer closes.
 			
-	public DealerManagement(Timer timer, TaskScheduler taskScheduler, Department department) {
+	public DealerManagement(Timers timer, TaskManager taskScheduler, Department department) {
 		this.timer = timer;
 		this.taskScheduler = taskScheduler;
 		this.department = department;
@@ -71,10 +77,12 @@ public class DealerManagement implements Observer{
 	 */
 	private void openDealership(DealerWorkingDay workingDay, CarDealer carDealer) {
 		TaskInjector injector = new OpenDealershipInjector();
-		TaskConsumer task = injector.getNewTask(department); 
-
+		TaskConsumer task = injector.getNewTask(department,TypeOfTask.REPEATABLE, 
+				new ScheduledTime(timer.currentTime() + 2, timer.currentTime() + 10)); 
+//		TaskConsumer task = injector.getNewTask(department);
+//		System.out.println(timer.time().formattedTime() + " - Opening " + carDealer.getName() + " for business."); // TODO - Log
 		workingDay.openForBusiness(OpeningHours.OPEN);
-		taskScheduler.scheduleTask(task);
+		taskScheduler.manageTask(task);
 	}
 	
 	/*
@@ -83,9 +91,9 @@ public class DealerManagement implements Observer{
 	private void closeDealership(DealerWorkingDay workingDay, CarDealer carDealer) {
 		TaskInjector injector = new CloseDealershipInjector();
 		TaskConsumer task = injector.getNewTask(department);
-		
+		System.out.println(timer.time().formattedTime() + " - Closing " + carDealer.getName() + " for business."); // TODO - Log		
 		workingDay.openForBusiness(OpeningHours.CLOSED);
-		taskScheduler.scheduleTask(task);
+		taskScheduler.manageTask(task);
 	}
 	
 	/*
@@ -101,15 +109,27 @@ public class DealerManagement implements Observer{
 			if(inBusinessHours) {
 				// Should be open. If it's not, open it.
 				if(workingDay.openForBusiness() == OpeningHours.CLOSED) {
-					System.out.println(timer.time().formattedTime() + " - Opening " + carDealer.getName() + " for business."); // TODO - Log
 					openDealership(workingDay, carDealer);
 				}
 			}else {
 				// Should be closed. If it's not, close it.
 				if(workingDay.openForBusiness() == OpeningHours.OPEN) {
-					System.out.println(timer.time().formattedTime() + " - Closing " + carDealer.getName() + " for business."); // TODO - Log
 					closeDealership(workingDay, carDealer);
 				}
+			}
+		}
+	}
+	
+	/*
+	 *  Told to close any dealers that are open.
+	 */
+	private void forceClosureOfDealers() {
+		System.out.println("(DM)");
+		for (CarDealer carDealer : dealerList) {
+			if(carDealer.getWorkingDay().openForBusiness()) {
+				System.out.println("(DM) closing dealers");
+				closeDealership(carDealer.getWorkingDay(), carDealer);
+			
 			}
 		}
 	}
@@ -119,8 +139,23 @@ public class DealerManagement implements Observer{
 	 * @see observer.Observer#updateObserver()
 	 */
 	@Override
-	public void updateObserver() {
-		checkDealerStatus();
+	public void updateObserver(ObserverMessage msg) {
+			// Do work in here....
+			switch (msg) {
+			case DO_WORK:
+				checkDealerStatus();
+				break;
+
+			case STOPPING:
+//				dealers.notifyObservers(ObserverMessage.STOPPING);
+				
+				// Head office has told us to close dealers that are open.
+				forceClosureOfDealers();
+				break;
+			default:
+				break;
+			}
+		
 	}
 	
 	/*

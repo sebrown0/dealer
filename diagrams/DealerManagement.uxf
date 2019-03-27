@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>9</zoom_level>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>837</x>
+      <y>468</y>
+      <w>315</w>
+      <h>288</h>
+    </coordinates>
+    <panel_attributes>dealer_management
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>846</x>
+      <y>495</y>
+      <w>270</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>_DealerManagement_
+--
+- timer: Timers
+- taskScheduler: TaskScheduler </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>846</x>
+      <y>585</y>
+      <w>270</w>
+      <h>162</h>
+    </coordinates>
+    <panel_attributes>1. Uses the Timer suplied by HeadOffice.
+
+
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>837</x>
+      <y>153</y>
+      <w>297</w>
+      <h>207</h>
+    </coordinates>
+    <panel_attributes>head_office
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>846</x>
+      <y>270</y>
+      <w>270</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>1. Timer ticks forward 1s at a time and is used 
+as the basis of timed events throughout the 
+application.
+
+
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>846</x>
+      <y>180</y>
+      <w>270</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>_HeadOffice_
+--
+- timer: Timers
+- dealerManagement: DealerManagement
+- taskScheduler: TaskScheduler
+- headOffice: Subject </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>225</x>
+      <y>423</y>
+      <w>513</w>
+      <h>288</h>
+    </coordinates>
+    <panel_attributes>task_scheduler
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>495</x>
+      <y>450</y>
+      <w>207</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>_TaskScheduler_
+--
+- timer: Timers</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>432</x>
+      <y>540</y>
+      <w>270</w>
+      <h>162</h>
+    </coordinates>
+    <panel_attributes>1. Uses the Timer suplied by HeadOffice.
+2. Puts tasks into the task queue if they are not 
+to be executed immediately.
+3. Check for scheduled tasks every heartbeat.
+4. If a task in the task queue is ready to be 
+executed at the current time then assign a task 
+executor to the task.
+
+
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>756</x>
+      <y>225</y>
+      <w>270</w>
+      <h>288</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0;10.0;240.0;280.0;240.0;280.0;300.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>594</x>
+      <y>216</y>
+      <w>270</w>
+      <h>252</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..</panel_attributes>
+    <additional_attributes>280.0;10.0;10.0;10.0;10.0;260.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>459</x>
+      <y>180</y>
+      <w>405</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;10.0;170.0;40.0;430.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>378</x>
+      <y>171</y>
+      <w>90</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>/Timers/
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>630</x>
+      <y>81</y>
+      <w>441</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>* High Level View of Dealer Management with Task Scheduling*
+fontsize=16
+//fontfamily=SansSerif //possible: SansSerif,Serif,Monospaced
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>234</x>
+      <y>450</y>
+      <w>207</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>_TaskExecutor_
+--
+- timer: Timers</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

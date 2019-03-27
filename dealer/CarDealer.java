@@ -1,12 +1,13 @@
 package dealer;
 
 import java.util.List;
+
+import database.DatabaseDAO;
 import dealer_working_day.DealerWorkingDay;
 import dealer_working_day.OpeningHours;
+import depts.Department;
 import franchise.FranchiseDealer;
 import main_dealer.MainDealer;
-import database.DatabaseDAO;
-import depts.Department;
 
 /*
  *  @author Steve Brown.

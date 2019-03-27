@@ -5,7 +5,7 @@ package main_dealer;
 
 import java.util.concurrent.TimeUnit;
 
-import dealer_working_day.*;
+import dealer_working_day.OpeningHours;
 
 /**
  * @author Steve Brown
