@@ -35,7 +35,7 @@ import timer.Timers;
 public class DealerManagement implements Observer{
 
 	private Timers timer = null; 								// Supplied by HeadOffice.
-	private TaskManager taskScheduler;						// Supplied by HeadOffice.
+	private TaskManager taskScheduler;							// Supplied by HeadOffice.
 	private Department department;								// Supplied by HeadOffice.
 	private List<CarDealer> dealerList = new ArrayList<>();		// A list of all dealers.
 	private int firstOpeningTime = Integer.MAX_VALUE;			// The time that the first dealer to opens.
@@ -129,7 +129,6 @@ public class DealerManagement implements Observer{
 			if(carDealer.getWorkingDay().openForBusiness()) {
 				System.out.println("(DM) closing dealers");
 				closeDealership(carDealer.getWorkingDay(), carDealer);
-			
 			}
 		}
 	}
