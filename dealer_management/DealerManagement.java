@@ -77,9 +77,7 @@ public class DealerManagement implements Observer{
 	 */
 	private void openDealership(DealerWorkingDay workingDay, CarDealer carDealer) {
 		TaskInjector injector = new OpenDealershipInjector();
-		TaskConsumer task = injector.getNewTask(department,TypeOfTask.REPEATABLE, 
-				new ScheduledTime(timer.currentTime() + 2, timer.currentTime() + 10)); 
-//		TaskConsumer task = injector.getNewTask(department);
+		TaskConsumer task = injector.getNewTask(department);
 //		System.out.println(timer.time().formattedTime() + " - Opening " + carDealer.getName() + " for business."); // TODO - Log
 		workingDay.openForBusiness(OpeningHours.OPEN);
 		taskScheduler.manageTask(task);
@@ -91,7 +89,7 @@ public class DealerManagement implements Observer{
 	private void closeDealership(DealerWorkingDay workingDay, CarDealer carDealer) {
 		TaskInjector injector = new CloseDealershipInjector();
 		TaskConsumer task = injector.getNewTask(department);
-		System.out.println(timer.time().formattedTime() + " - Closing " + carDealer.getName() + " for business."); // TODO - Log		
+//		System.out.println(timer.time().formattedTime() + " - Closing " + carDealer.getName() + " for business."); // TODO - Log		
 		workingDay.openForBusiness(OpeningHours.CLOSED);
 		taskScheduler.manageTask(task);
 	}
@@ -121,13 +119,11 @@ public class DealerManagement implements Observer{
 	}
 	
 	/*
-	 *  Told to close any dealers that are open.
+	 *  Close any dealers that are open.
 	 */
 	private void forceClosureOfDealers() {
-		System.out.println("(DM)");
 		for (CarDealer carDealer : dealerList) {
 			if(carDealer.getWorkingDay().openForBusiness()) {
-				System.out.println("(DM) closing dealers");
 				closeDealership(carDealer.getWorkingDay(), carDealer);
 			}
 		}
@@ -145,16 +141,14 @@ public class DealerManagement implements Observer{
 				checkDealerStatus();
 				break;
 
-			case STOPPING:
-//				dealers.notifyObservers(ObserverMessage.STOPPING);
-				
+			case STOPPING:				
 				// Head office has told us to close dealers that are open.
 				forceClosureOfDealers();
 				break;
+				
 			default:
 				break;
 			}
-		
 	}
 	
 	/*
