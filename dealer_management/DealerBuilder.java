@@ -3,8 +3,6 @@
  */
 package dealer_management;
 
-import java.util.List;
-
 import dealer.CarDealer;
 import dealer_working_day.DealerWorkingDay;
 
@@ -15,20 +13,22 @@ import dealer_working_day.DealerWorkingDay;
  */
 public interface DealerBuilder {
 
-	/*
-	 *  Inputs:
-	 *  	1. dealerList: List of all dealers. This is updated with the newly created dealership.
-	 *  	2. dealerBuilder: The type of dealer to build.
-	 *  	3. name: the name of the dealer.
-	 *  	4. openingHours: the opening times of the dealer.
-	 */
-	default void buildDealer(List<CarDealer> dealerList, DealerBuilder dealerBuilder, String name, DealerWorkingDay openingHours) {
-		dealerBuilder.build(dealerList, name, openingHours);
-	}
-	
+	default CarDealer buildDealer(
+			DealerBuilder dealerBuilder,	// The type of dealer to build.
+			String name, 					// The name of the dealer.
+			DealerWorkingDay openingHours,	// The opening times of the dealer.
+			DealerDAO dealerDAO){			// Objects that a dealer requires, i.e. data base.
+				return dealerBuilder.build( 
+					name, 
+					openingHours, 
+					dealerDAO);
+			}
+
 	/*
 	 *  Child dealer builder implements this method.
 	 */
-	void build(List<CarDealer> dealerList, String name, DealerWorkingDay openingHours);
-
+	CarDealer build( 
+			String name, 
+			DealerWorkingDay openingHours,
+			DealerDAO dealerDAO);
 }
