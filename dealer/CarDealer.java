@@ -8,6 +8,9 @@ import dealer_working_day.OpeningHours;
 import departments.department.Department;
 import franchise.FranchiseDealer;
 import main_dealer.MainDealer;
+import tasks.task_objects.OpenDealership;
+import tasks.task_status.Taskable;
+import tasks.task_status.TasksStatus;
 
 /*
  *  @author Steve Brown.
@@ -18,7 +21,7 @@ import main_dealer.MainDealer;
  *  
  *  Contains a helper class to access an instance of a dealership.
  */
-public class CarDealer {//implements Dealership{
+public class CarDealer implements Taskable {//implements Dealership{
 		
 	private String name = "";
 	private DealerWorkingDay workingDay = null;
@@ -34,6 +37,13 @@ public class CarDealer {//implements Dealership{
 		this.departments = dealershipBuilder.departments;
 		this.dealership = dealershipBuilder.dealership;
 		this.dealerDAO = dealershipBuilder.dealerDAO;	
+	}
+	
+	@Override
+	public void taskUpdate(TasksStatus s) {
+		
+		dealerDAO.getLog().logEntry("<<TASK UPDATE>>", "Completed Task = " + s.taskStatus() + " - Task ID = " + s.taskStatus());
+		
 	}
 	
 	public CarDealer getDealership() {
@@ -133,6 +143,8 @@ public class CarDealer {//implements Dealership{
 			this.setDealerDAO(dealerDAO);
 		}
 	}
+
+	
 
 //	@Override
 //	public void startTrading() {

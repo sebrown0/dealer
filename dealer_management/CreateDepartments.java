@@ -33,7 +33,7 @@ public class CreateDepartments {
 	
 	
 	public CreateDepartments(DealerDAO dealerDAO) {
-		this.objId = "<" + "dept.deptName()" + ">" + " <" + this.getClass().getSimpleName() + ">";
+		this.objId = "<" + this.getClass().getSimpleName() + ">";
 		this.dealerDAO = dealerDAO;
 	}
 	
@@ -48,7 +48,6 @@ public class CreateDepartments {
 
 		dealerDAO.getDatabase().dbConnect(); // TODO - Drop DB connection when finished.
 
-		
 		// Use a stored procedure to get the departments.
 		StoredProcedure sp = new StoredProcedure(HRDeptSP.GET_DEPARTMENTS.value(), dealerDAO.getDatabase().dbConnection(), log);
 		sp.execute();
@@ -102,7 +101,6 @@ public class CreateDepartments {
 	}
 
 	public List<Department> getDepartments() {
-//		public BlockingQueue<Department> getDepartments() {
 		// Will have to cast the receiving object to TaskCreateDepartments if instantiated as TaskRunner.
 		return departmentList;
 	}

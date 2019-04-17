@@ -10,19 +10,17 @@ import dealer.CarDealer;
 import dealer_working_day.DealerWorkingDay;
 import dealer_working_day.OpeningHours;
 import departments.department.Department;
+import employees.Employee;
 import observer.Observer;
 import observer.ObserverMessage;
 import task_scheduler.TaskManager;
-import tasks.task_creators.AtomicTaskDetails;
-import tasks.task_creators.AtomicTaskInjector;
-import tasks.task_creators.DepartmentTaskDetails;
-import tasks.task_creators.DepartmentTaskInjector;
-import tasks.task_creators.DepartmentTasksDetails;
-import tasks.task_creators.TaskConsumer;
-import tasks.task_creators.TypeOfTask;
+import tasks.task_details.Details;
+import tasks.task_details.TasksDetails;
+import tasks.task_injectors.AtomicTaskInjector;
 import tasks.task_injectors.CloseDealershipInjector;
 import tasks.task_injectors.OpenDealershipInjector;
 import tasks.task_injectors.RollCallInjector;
+import tasks.task_super_objects.AtomicTask;
 import timer.Timers;
 import utils.Log;
 
@@ -40,15 +38,15 @@ import utils.Log;
 public class DealerManagement implements Observer{
 
 	private Timers timer;		 								// Supplied by HeadOffice.
-	private TaskManager taskScheduler;							// Supplied by HeadOffice.
+	private TaskManager taskManager;							// Supplied by HeadOffice.
 	private Log log;											// Supplied by HeadOffice.
 	private List<CarDealer> dealerList = new ArrayList<>();		// A list of all dealers.
 	private int firstOpeningTime = Integer.MAX_VALUE;			// The time that the first dealer to opens.
 	private int lastClosingTime = Integer.MIN_VALUE;			// The time that the first dealer closes.
-			
-	public DealerManagement(Timers timer, TaskManager taskScheduler, Log log) {
+		
+	public DealerManagement(Timers timer, TaskManager taskManager, Log log) {
 		this.timer = timer;
-		this.taskScheduler = taskScheduler;
+		this.taskManager = taskManager;
 		this.log = log;
 	}
 	
@@ -60,7 +58,7 @@ public class DealerManagement implements Observer{
 		String name, 
 		DealerWorkingDay openingHours,
 		DealerDAO dealerDAO) {
-		
+			
 		CarDealer dealership = typeOfDealerBuilder.buildDealer(typeOfDealerBuilder, name, 
 				openingHours, dealerDAO);
 		
@@ -84,19 +82,22 @@ public class DealerManagement implements Observer{
 		dealership.setDepartments(departments);
 		
 		if(!departments.isEmpty()) {
-			rollCall(departments);
+			rollCall(departments, dealership.getDealerDAO());
 		}
 	}
 	
 	/*
 	 *  See which employees are able to work.
 	 */
-	private void rollCall(List<Department> departments) {
-		DepartmentTaskInjector injector = new RollCallInjector();
+	private void rollCall(List<Department> departments, DealerDAO dealerDAO) {
+		AtomicTaskInjector injector = new RollCallInjector();
+
 		for(Department d: departments) {
-			DepartmentTasksDetails tasksDetails = 
-					new DepartmentTaskDetails(TypeOfTask.ATOMIC, d.log(), "Roll Call", "id", d);
-			taskScheduler.manageTask(injector.getNewTask(tasksDetails)); 
+			TasksDetails tasksDetails =
+					new Details("Roll Call", "TODO", d); // TODO
+
+			taskManager.manageTask(injector.getNewTask(tasksDetails, d), new Employee("Steve ROllCall", "Brown") { // TODO
+			}); 
 		}	
 	}
 	
@@ -122,21 +123,24 @@ public class DealerManagement implements Observer{
 	 */
 	private void openDealership(DealerWorkingDay workingDay, CarDealer carDealer) {
 		AtomicTaskInjector injector = new OpenDealershipInjector();
-		TaskConsumer task = injector.getNewTask(new AtomicTaskDetails(TypeOfTask.ATOMIC, log, "Open Dealer", "objId"));
+		AtomicTask task = injector.getNewTask(new Details("Open Dealer", "objId"), null);
+
+		taskManager.manageTask(task, new Employee("Task", "Manager") { // TODO
+		}); 
 
 		workingDay.openForBusiness(OpeningHours.OPEN);
-		taskScheduler.manageTask(task);
 	}
-	
+
 	/*
 	 *  Close a dealer.
 	 */
 	private void closeDealership(DealerWorkingDay workingDay, CarDealer carDealer) {
 		AtomicTaskInjector injector = new CloseDealershipInjector();
-		TaskConsumer task = injector.getNewTask(new AtomicTaskDetails(TypeOfTask.ATOMIC, log, "Close Dealer", "objId"));
+		AtomicTask task = injector.getNewTask(new Details("Close Dealer", "objId"), null);
 		
+		taskManager.manageTask(task, new Employee("Task", "Manager") { // TODO
+		}); 
 		workingDay.openForBusiness(OpeningHours.CLOSED);
-		taskScheduler.manageTask(task);
 	}
 	
 	/*

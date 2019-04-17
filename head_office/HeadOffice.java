@@ -22,13 +22,13 @@ import utils.Simulator;
 /**
  * @author Steve Brown
  *
- *  The object that manages all other objects.
+ *  
  */
 public class HeadOffice implements Observer {		
 	private Timers timer; 
 	private DealerManagement dealershipManagement;
-	private TaskManager taskManager;								// Task manager for HeadOffice/DealerManagement.
-	private static Log log;											// Log for the App.
+	private TaskManager taskManager;								
+	private static Log log;											
 	private Subject headOffice = new GenericSubject("HeadOffice");
 	
 	private HeadOffice() {};
@@ -61,10 +61,6 @@ public class HeadOffice implements Observer {
 
 	}
 		
-	/*
-	 * (non-Javadoc)
-	 * @see observer.Observer#updateObserver()
-	 */
 	@Override
 	public void updateObserver(ObserverMessage msg) {
 		// TODO - Only if INITIALISED!
@@ -111,9 +107,6 @@ public class HeadOffice implements Observer {
 
 	}
 	
-	/*
-	 *  Get the application log.
-	 */
 	public Log appLog() {
 		return log;
 	}
