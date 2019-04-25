@@ -3,6 +3,7 @@
  */
 package head_office;
 
+import dealer.CarDealer;
 import dealer_management.DealerManagement;
 import heartbeat.FastHeartbeat;
 import heartbeat.SlowHeartbeat;
@@ -60,7 +61,23 @@ public class HeadOffice implements Observer {
 		headOffice.registerObserver(dealershipManagement); // THIS SHOULD BE A DEALER!!!!!!!!!!!!!
 
 	}
+	
+	/*
+	 * 	****************************** USED FOR TESTING START******************************
+	 * 	before deleting make sure that they are not needed.
+	 */
+	public TaskManager getTaskManager() {
+		return taskManager;
+	}
 		
+	/*
+	 * 	****************************** USED FOR TESTING END******************************
+	 */
+	
+	public CarDealer getDealerByName(String dealerName) {
+		return dealershipManagement.getDealerByName(dealerName);
+	}
+	
 	@Override
 	public void updateObserver(ObserverMessage msg) {
 		// TODO - Only if INITIALISED!

@@ -4,6 +4,7 @@ package dealer_management;
 import dao.DatabaseDAO;
 import dao.SparkSessionDAO;
 import task_scheduler.Manager;
+import task_scheduler.TaskManager;
 import timer.Timers;
 import utils.Log;
 
@@ -19,7 +20,7 @@ public class DealerObjects implements DealerDAO {
 	private SparkSessionDAO spark;		 
 	private Timers timer;				 
 	private Log log;					 
-	private Manager taskManager;		
+	private TaskManager taskManager;		
 	
 	/**
 	 * @param database: Dealer's data base.
@@ -28,7 +29,7 @@ public class DealerObjects implements DealerDAO {
 	 * @param log: Application/Dealer log.
 	 * @param taskManager: Dealer's TaskManager.
 	 */
-	public DealerObjects(DatabaseDAO database, SparkSessionDAO spark, Timers timer, Log log, Manager taskManager) {
+	public DealerObjects(DatabaseDAO database, SparkSessionDAO spark, Timers timer, Log log, TaskManager taskManager) {
 		super();
 		this.database = database;
 		this.spark = spark;

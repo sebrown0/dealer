@@ -10,7 +10,6 @@ import dealer.CarDealer;
 import dealer_working_day.DealerWorkingDay;
 import dealer_working_day.OpeningHours;
 import departments.department.Department;
-import employees.Employee;
 import observer.Observer;
 import observer.ObserverMessage;
 import task_scheduler.TaskManager;
@@ -53,35 +52,32 @@ public class DealerManagement implements Observer{
 	/*
 	 *  Create a new dealer (franchise or main).
 	 */
-	public void createNewDealer(
-		DealerBuilder typeOfDealerBuilder, 			
-		String name, 
-		DealerWorkingDay openingHours,
-		DealerDAO dealerDAO) {
+	public void createNewDealer(DealerBuilder typeOfDealerBuilder, String name, 
+									DealerWorkingDay openingHours, DealerDAO dealerDAO) {
 			
 		CarDealer dealership = typeOfDealerBuilder.buildDealer(typeOfDealerBuilder, name, 
 				openingHours, dealerDAO);
 		
 		if(dealership != null) {
-			dealerDAO.getLog().logEntry(name, "Created Car Dealer" + dealership.getName());
+			dealerDAO.getLog().logEntry(name, "Created Car Dealer: " + dealership.getName());
 			dealerList.add(dealership);
 			getFirstAndLast();
 			createDepartments(dealership);
 		}		
 	}
 		
+		
 	/*
 	 *  Add departments to the dealer.
 	 */
 	private void createDepartments(CarDealer dealership) {
-		CreateDepartments dealerDepts 
-			= new CreateDepartments(dealership.getDealerDAO());
+		CreateDepartments dealerDepts = new CreateDepartments(dealership.getDealerDAO());
 		
 		dealerDepts.createDepartments();
 		List<Department> departments = dealerDepts.getDepartments();
-		dealership.setDepartments(departments);
 		
 		if(!departments.isEmpty()) {
+			dealership.setDepartments(departments);
 			rollCall(departments, dealership.getDealerDAO());
 		}
 	}
@@ -93,11 +89,8 @@ public class DealerManagement implements Observer{
 		AtomicTaskInjector injector = new RollCallInjector();
 
 		for(Department d: departments) {
-			TasksDetails tasksDetails =
-					new Details("Roll Call", "TODO", d); // TODO
-
-			taskManager.manageTask(injector.getNewTask(tasksDetails, d), new Employee("Steve ROllCall", "Brown") { // TODO
-			}); 
+			TasksDetails tasksDetails =	new Details("Roll Call", "TODO", d); // TODO
+			taskManager.giveTask(injector.getNewTask(tasksDetails, d));
 		}	
 	}
 	
@@ -125,9 +118,7 @@ public class DealerManagement implements Observer{
 		AtomicTaskInjector injector = new OpenDealershipInjector();
 		AtomicTask task = injector.getNewTask(new Details("Open Dealer", "objId"), null);
 
-		taskManager.manageTask(task, new Employee("Task", "Manager") { // TODO
-		}); 
-
+		taskManager.giveTask(task);
 		workingDay.openForBusiness(OpeningHours.OPEN);
 	}
 
@@ -137,9 +128,7 @@ public class DealerManagement implements Observer{
 	private void closeDealership(DealerWorkingDay workingDay, CarDealer carDealer) {
 		AtomicTaskInjector injector = new CloseDealershipInjector();
 		AtomicTask task = injector.getNewTask(new Details("Close Dealer", "objId"), null);
-		
-		taskManager.manageTask(task, new Employee("Task", "Manager") { // TODO
-		}); 
+		taskManager.giveTask(task);
 		workingDay.openForBusiness(OpeningHours.CLOSED);
 	}
 	
@@ -171,11 +160,9 @@ public class DealerManagement implements Observer{
 	 *  Close any dealers that are open.
 	 */
 	private void forceClosureOfDealers() {
-		for (CarDealer carDealer : dealerList) {
-			if(carDealer.getWorkingDay().openForBusiness()) {
+		for (CarDealer carDealer : dealerList)
+			if(carDealer.getWorkingDay().openForBusiness()) 
 				closeDealership(carDealer.getWorkingDay(), carDealer);
-			}
-		}
 	}
 
 	/*
@@ -200,6 +187,18 @@ public class DealerManagement implements Observer{
 			}
 	}
 	
+	// TODO - Test purposes?
+	public CarDealer getFirstDealer() {
+			return dealerList.get(0);
+	}
+		
+	public CarDealer getDealerByName(String dealerName) {
+		for (CarDealer d : dealerList) 
+			if(d.getName() == dealerName)
+				return d;
+		return null;
+	}
+
 	/*
 	 *  Getters and Setters below.
 	 */

@@ -21,13 +21,12 @@ import tasks.task_status.TasksStatus;
  *  
  *  Contains a helper class to access an instance of a dealership.
  */
-public class CarDealer implements Taskable {//implements Dealership{
+public class CarDealer implements Taskable {
 		
 	private String name = "";
 	private DealerWorkingDay workingDay = null;
-//	private OpeningHours openingHours = null;					// TODO - Do we need>??????????
 	private List<Department> departments = null;
-	private CarDealer dealership = null;						// TODO - Remove>?????????????????
+	private CarDealer dealership = null;						
 	private DealerDAO dealerDAO = null;
 	
 
@@ -41,9 +40,14 @@ public class CarDealer implements Taskable {//implements Dealership{
 	
 	@Override
 	public void taskUpdate(TasksStatus s) {
-		
 		dealerDAO.getLog().logEntry("<<TASK UPDATE>>", "Completed Task = " + s.taskStatus() + " - Task ID = " + s.taskStatus());
-		
+	}
+	
+	public Department getDepartmentByName(String deptName) {
+		for (Department d : departments) 
+			if(d.deptName().equals(deptName))
+				return d;
+		return null;
 	}
 	
 	public CarDealer getDealership() {
@@ -120,9 +124,6 @@ public class CarDealer implements Taskable {//implements Dealership{
 		}
 	}
 
-	/*
-	 *  TODO
-	 */
 	public static class MainDealerBuilder extends DealershipBuilder {
 
 		public MainDealerBuilder(MainDealer dealership, DealerWorkingDay workingDay, DealerDAO dealerDAO) {
@@ -132,9 +133,6 @@ public class CarDealer implements Taskable {//implements Dealership{
 		}
 	}
 
-	/*
-	 *  TODO
-	 */
 	public static class FranchiseDealerBuilder extends DealershipBuilder {
 
 		public FranchiseDealerBuilder(FranchiseDealer dealership, DealerWorkingDay workingDay, DealerDAO dealerDAO) {
@@ -143,35 +141,4 @@ public class CarDealer implements Taskable {//implements Dealership{
 			this.setDealerDAO(dealerDAO);
 		}
 	}
-
-	
-
-//	@Override
-//	public void startTrading() {
-//		msg(); // TODO - R
-
-		// Start the clock
-//		dealershipTimer = new HeartBeat(workingDay.getLengthOfWorkingDay());
-//		
-//		dealershipRunner.scheduleAtFixedRate(() -> {
-//			System.out.println(name + " " + dealershipTimer.countdownTheClock() + "s until home time");
-//			if(dealershipTimer.timeToClose()) {
-//				closeDealership();
-//			}
-//		}
-//		, 1, 1, TimeUnit.SECONDS);
-		
-//	}
-
-//	@Override
-//	public void open() {
-//		System.out.println(this.getName() + "'s opening time: " );
-//		
-//	}
-//
-//	@Override
-//	public void close() {
-//		System.out.println(this.getName() + "'s closing time: " 
-//				);
-//	}		
 }
