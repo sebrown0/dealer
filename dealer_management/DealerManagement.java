@@ -13,8 +13,6 @@ import departments.department.Department;
 import observer.Observer;
 import observer.ObserverMessage;
 import task_scheduler.TaskManager;
-import tasks.task_details.Details;
-import tasks.task_details.TasksDetails;
 import tasks.task_injectors.AtomicTaskInjector;
 import tasks.task_injectors.CloseDealershipInjector;
 import tasks.task_injectors.OpenDealershipInjector;
@@ -90,10 +88,8 @@ public class DealerManagement implements Observer, Loggable{
 	private void rollCall(List<Department> departments, DealerDAO dealerDAO) {
 		AtomicTaskInjector injector = new RollCallInjector();
 
-		for(Department d: departments) {
-			TasksDetails tasksDetails =	new Details("Roll Call", "TODO", d); // TODO
-			taskManager.giveTask(injector.getNewTask(tasksDetails, d));
-		}	
+		for(Department d: departments) 
+			taskManager.giveTask(injector.getNewTask(d));
 	}
 	
 	/*
@@ -118,7 +114,7 @@ public class DealerManagement implements Observer, Loggable{
 	 */
 	private void openDealership(DealerWorkingDay workingDay, CarDealer carDealer) {
 		AtomicTaskInjector injector = new OpenDealershipInjector();
-		AtomicTask task = injector.getNewTask(new Details("Open Dealer", "objId"), null);
+		AtomicTask task = injector.getNewTask(null);
 
 		taskManager.giveTask(task);
 		workingDay.openForBusiness(OpeningHours.OPEN);
@@ -129,7 +125,7 @@ public class DealerManagement implements Observer, Loggable{
 	 */
 	private void closeDealership(DealerWorkingDay workingDay, CarDealer carDealer) {
 		AtomicTaskInjector injector = new CloseDealershipInjector();
-		AtomicTask task = injector.getNewTask(new Details("Close Dealer", "objId"), null);
+		AtomicTask task = injector.getNewTask(null);
 		taskManager.giveTask(task);
 		workingDay.openForBusiness(OpeningHours.CLOSED);
 	}
