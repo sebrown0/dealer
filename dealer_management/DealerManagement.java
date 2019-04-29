@@ -20,8 +20,9 @@ import tasks.task_injectors.CloseDealershipInjector;
 import tasks.task_injectors.OpenDealershipInjector;
 import tasks.task_injectors.RollCallInjector;
 import tasks.task_super_objects.AtomicTask;
-import timer.Timers;
+import timer.Timer;
 import utils.Log;
+import utils.Loggable;
 
 /**
  * @author Steve Brown
@@ -34,16 +35,16 @@ import utils.Log;
  *   If HeadOffice closes then all open dealers are told to close.
  *   This means that HO should be running continuously during opening hours. 
  */
-public class DealerManagement implements Observer{
+public class DealerManagement implements Observer, Loggable{
 
-	private Timers timer;		 								// Supplied by HeadOffice.
+	private Timer timer;		 								// Supplied by HeadOffice.
 	private TaskManager taskManager;							// Supplied by HeadOffice.
 	private Log log;											// Supplied by HeadOffice.
 	private List<CarDealer> dealerList = new ArrayList<>();		// A list of all dealers.
 	private int firstOpeningTime = Integer.MAX_VALUE;			// The time that the first dealer to opens.
 	private int lastClosingTime = Integer.MIN_VALUE;			// The time that the first dealer closes.
-		
-	public DealerManagement(Timers timer, TaskManager taskManager, Log log) {
+	
+	public DealerManagement(Timer timer, TaskManager taskManager, Log log) {
 		this.timer = timer;
 		this.taskManager = taskManager;
 		this.log = log;
@@ -54,12 +55,13 @@ public class DealerManagement implements Observer{
 	 */
 	public void createNewDealer(DealerBuilder typeOfDealerBuilder, String name, 
 									DealerWorkingDay openingHours, DealerDAO dealerDAO) {
-			
+		
+
 		CarDealer dealership = typeOfDealerBuilder.buildDealer(typeOfDealerBuilder, name, 
 				openingHours, dealerDAO);
-		
+
 		if(dealership != null) {
-			dealerDAO.getLog().logEntry(name, "Created Car Dealer: " + dealership.getName());
+			log.logEntry(this, "Created Car Dealer: " + dealership.getName());
 			dealerList.add(dealership);
 			getFirstAndLast();
 			createDepartments(dealership);

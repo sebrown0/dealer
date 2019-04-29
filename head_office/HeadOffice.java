@@ -14,8 +14,8 @@ import observer.Subject;
 import task_scheduler.TaskManager;
 import time.MutableTime;
 import timer.SlowTimer;
+import timer.Timer;
 import timer.TimerDurationSeconds;
-import timer.Timers;
 import utils.Log;
 import utils.Logger.LogHelper;
 import utils.Simulator;
@@ -26,7 +26,7 @@ import utils.Simulator;
  *  
  */
 public class HeadOffice implements Observer {		
-	private Timers timer; 
+	private Timer timer; 
 	private DealerManagement dealershipManagement;
 	private TaskManager taskManager;								
 	private static Log log;											
@@ -41,8 +41,7 @@ public class HeadOffice implements Observer {
 	 *  	3. Gets a TaskManager - TODO remove
 	 */
 	public void initialise(MutableTime time, TimerDurationSeconds duration) {
-		log = LogHelper.logInstance(true); 			// A new log to begin the day.
-		
+				
 		timer = new SlowTimer(
 				time,								// Starting time of the timer. 
 				new SlowHeartbeat("HeadOffice"), 	// Use a slow heart beat.
@@ -51,6 +50,7 @@ public class HeadOffice implements Observer {
 				this);								// Register us as an observer of the timer.
 		 
 		timer.startTimer();
+		log = LogHelper.logInstance(true, timer); 			// A new log to begin the day.
 
 		// Get a TaskManager to deal with all tasks for a dealer.
 		taskManager = new TaskManager(timer, new FastHeartbeat("Head Office Task Manager"), log);
@@ -146,7 +146,7 @@ public class HeadOffice implements Observer {
 	/*
 	 *  Get the App's timer.
 	 */
-	public Timers timer() {
+	public Timer timer() {
 		return timer;
 	}
 	

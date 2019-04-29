@@ -5,6 +5,7 @@ import dao.DatabaseDAO;
 import dao.SparkSessionDAO;
 import task_scheduler.Manager;
 import task_scheduler.TaskManager;
+import timer.Timer;
 import timer.Timers;
 import utils.Log;
 
@@ -18,7 +19,7 @@ public class DealerObjects implements DealerDAO {
 
 	private DatabaseDAO database;		 
 	private SparkSessionDAO spark;		 
-	private Timers timer;				 
+	private Timer timer;				 
 	private Log log;					 
 	private TaskManager taskManager;		
 	
@@ -29,13 +30,31 @@ public class DealerObjects implements DealerDAO {
 	 * @param log: Application/Dealer log.
 	 * @param taskManager: Dealer's TaskManager.
 	 */
-	public DealerObjects(DatabaseDAO database, SparkSessionDAO spark, Timers timer, Log log, TaskManager taskManager) {
+	public DealerObjects(DatabaseDAO database, SparkSessionDAO spark, Timer timer, Log log, TaskManager taskManager) {
 		super();
-		this.database = database;
-		this.spark = spark;
-		this.timer = timer;
-		this.log = log;
-		this.taskManager = taskManager;
+		if(database != null) {
+			this.database = database;
+			System.out.println("DB OK");
+		}
+		
+		if(spark != null) {
+			this.spark = spark;
+			System.out.println("Spark OK");
+		}
+		if(timer != null) {
+			this.timer = timer;
+			System.out.println("Timer OK");
+		}
+		
+		if(log != null) {
+			this.log = log;
+			System.out.println("Log OK");
+		}
+		
+		if(taskManager != null) {
+			this.taskManager = taskManager;
+			System.out.println("TM OK");
+		}
 	}
 
 	/* (non-Javadoc)
@@ -58,7 +77,7 @@ public class DealerObjects implements DealerDAO {
 	 * @see dealer_management.DealerDAO#getTimer()
 	 */
 	@Override
-	public Timers getTimer() {
+	public Timer getTimer() {
 		return timer;
 	}
 

@@ -3,7 +3,7 @@ package dealer_management;
 import dao.DatabaseDAO;
 import dao.SparkSessionDAO;
 import task_scheduler.Manager;
-import timer.Timers;
+import timer.Timer;
 import utils.Log;
 
 public interface DealerDAO {
@@ -12,7 +12,7 @@ public interface DealerDAO {
 
 	SparkSessionDAO getSpark();
 
-	Timers getTimer();
+	Timer getTimer();
 
 	Log getLog();
 
