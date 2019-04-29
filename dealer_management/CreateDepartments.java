@@ -101,7 +101,7 @@ public class CreateDepartments implements Loggable {
 
 	private ObjectDetails createDepartmentDetails(String id, ConcurrentHashMap<String, String> departments) {
 		ObjectDetails details = new ObjectDetails();
-		details.setDeptId(id);
+		details.setDeptID(id);
 		details.setDeptName(departments.get(id));
 		return details;
 	}
