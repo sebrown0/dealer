@@ -3,19 +3,25 @@
  */
 package dealer_management;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import database.StoredProcedure;
+import departments.accounts_department.AccountsDeptartment;
 import departments.department.Department;
 import departments.department.ObjectDetails;
-import departments.hr_department.HRDept;
+import departments.garage_services_department.GarageServicesDeptartment;
+import departments.hr_department.HRDeptartment;
+import departments.it_department.ITDepartment;
 import departments.order_department.OrderDepartment;
 import departments.sales_department.SalesDepartment;
-import departments.stock_department.StockDept;
+import departments.stock_department.StockDeptartment;
 import enums.ErrorCodes;
 import enums.HRDeptSP;
+import tasks.task_helper.CreateEmployee;
+import tasks.task_helper.CreateEmployeeHelper;
 import utils.Log;
 import utils.Loggable;
 
@@ -27,12 +33,12 @@ import utils.Loggable;
  *	So they have to be created before any other tasks can be run.
  *	Should be run at the start of each new day.
  */
-public class CreateDepartments implements Loggable {
+public class DepartmentFactory implements Loggable {
 	
 	private List<Department> departmentList = new ArrayList<>();
 	private DealerDAO dealerDAO;
 			
-	public CreateDepartments(DealerDAO dealerDAO) {
+	public DepartmentFactory(DealerDAO dealerDAO) {
 		this.dealerDAO = dealerDAO;
 	}
 	
@@ -43,8 +49,6 @@ public class CreateDepartments implements Loggable {
 		ErrorCodes errorCode = ErrorCodes.NONE;
 		Log log = dealerDAO.getLog(); 
 	
-		log.logEntry(this, "Creating Departments");
-
 		dealerDAO.getDatabase().dbConnect(); // TODO - Drop DB connection when finished.
 
 		// Use a stored procedure to get the departments.
@@ -52,35 +56,41 @@ public class CreateDepartments implements Loggable {
 		sp.execute();
 
 		if (sp.errorCode() == ErrorCodes.NONE) {
-
 			ConcurrentHashMap<String, String> departments 
-				= sp.getMapOfValues("dept_id", "dept_name"); // TODO - Use enum or map fields?
+				= sp.getMapOfValues("dept_id", "dept_name"); 
 
 			if (!departments.isEmpty()) {
 				for (String id : departments.keySet()) {
 					log.logEntry(this, "Creating " + departments.get(id) + " department");
 					ObjectDetails deptDetails = createDepartmentDetails(id, departments);
 					Department aDepartment = null;
-					switch (id) {			// TODO - Use enum for case statements
+					switch (id) {			
 					case "1":						
-						HRDept hr = new HRDept(deptDetails, dealerDAO);
-//						HRDept hr = new HRDept(id, departments.get(id), dealerDAO);
-						aDepartment = hr;
+						aDepartment = new HRDeptartment();
 						break;
 
 					case "2":
-						SalesDepartment sales = new SalesDepartment(deptDetails, dealerDAO);
-						aDepartment = sales;
+						aDepartment = new SalesDepartment();
+						break;
+						
+					case "3":
+						aDepartment = new ITDepartment();
+						break;
+						
+					case "4":
+						aDepartment = new AccountsDeptartment();
+						break;
+						
+					case "5":
+						aDepartment = new GarageServicesDeptartment();
 						break;
 					
 					case "6":
-						StockDept stock = new StockDept(deptDetails, dealerDAO);
-						aDepartment = stock;
+						aDepartment = new StockDeptartment();
 						break;
 					
 					case "7":
-						OrderDepartment order = new OrderDepartment(deptDetails, dealerDAO);
-						aDepartment = order;
+						aDepartment = new OrderDepartment();
 						break;
 						
 					default:
@@ -88,7 +98,7 @@ public class CreateDepartments implements Loggable {
 					}
 					
 					if(aDepartment != null) 	
-						departmentList.add(buildDepartment(aDepartment));	
+						departmentList.add(buildDepartment(aDepartment, deptDetails, dealerDAO));	
 				}
 			} else {
 				errorCode = ErrorCodes.UNKNOWN_ERROR; // TODO - Error code
@@ -106,17 +116,21 @@ public class CreateDepartments implements Loggable {
 		return details;
 	}
 	
-	private Department buildDepartment(Department aDepartment) {
-		aDepartment.setDatabase(dealerDAO.getDatabase());
-		aDepartment.setLog(dealerDAO.getLog());
-		aDepartment.setSparkSession(dealerDAO.getSpark());
-		aDepartment.setTaskManager(dealerDAO.getTaskManager());
-		aDepartment.setTimer(dealerDAO.getTimer());
+	private Department buildDepartment(Department aDepartment, ObjectDetails deptDetails, DealerDAO dealerDAO) {
+		aDepartment.setDepartmentDetails(deptDetails);
+		aDepartment.setDepartmentDAO(dealerDAO);
+		assignDeptManager(aDepartment);
 		return aDepartment;
 	}
 
+	private void assignDeptManager(Department aDepartment) {
+		CreateEmployeeHelper helper = new CreateEmployee(aDepartment);
+		ResultSet empRS = helper.getEmployeesFromDB(aDepartment.getDeptID(), HRDeptSP.DEPARTMENT_MANAGER); 
+		if(empRS != null) 
+			helper.updateTeam(empRS);		
+	}
+	
 	public List<Department> getDepartments() {
-		// Will have to cast the receiving object to TaskCreateDepartments if instantiated as TaskRunner.
 		return departmentList;
 	}
 }

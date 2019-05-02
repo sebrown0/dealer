@@ -13,11 +13,12 @@ import departments.department.Department;
 import observer.Observer;
 import observer.ObserverMessage;
 import task_scheduler.TaskManager;
-import tasks.task_injectors.AtomicTaskInjector;
 import tasks.task_injectors.CloseDealershipInjector;
+import tasks.task_injectors.LogDepartmentEmployeesInjector;
+import tasks.task_injectors.ManagementTaskInjector;
 import tasks.task_injectors.OpenDealershipInjector;
 import tasks.task_injectors.RollCallInjector;
-import tasks.task_super_objects.AtomicTask;
+import tasks.task_super_objects.ManagementTask;
 import timer.Timer;
 import utils.Log;
 import utils.Loggable;
@@ -63,32 +64,40 @@ public class DealerManagement implements Observer, Loggable{
 			dealerList.add(dealership);
 			getFirstAndLast();
 			createDepartments(dealership);
+			logDepartmentEmployees(dealership);
 		}		
 	}
-		
 		
 	/*
 	 *  Add departments to the dealer.
 	 */
 	private void createDepartments(CarDealer dealership) {
-		CreateDepartments dealerDepts = new CreateDepartments(dealership.getDealerDAO());
+		DepartmentFactory dealerDepts = new DepartmentFactory(dealership.getDealerDAO());
 		
 		dealerDepts.createDepartments();
 		List<Department> departments = dealerDepts.getDepartments();
 		
 		if(!departments.isEmpty()) {
 			dealership.setDepartments(departments);
-			rollCall(departments, dealership.getDealerDAO());
+			rollCall(departments);
 		}
 	}
 	
 	/*
 	 *  See which employees are able to work.
 	 */
-	private void rollCall(List<Department> departments, DealerDAO dealerDAO) {
-		AtomicTaskInjector injector = new RollCallInjector();
+	private void rollCall(List<Department> departments) {
+		ManagementTaskInjector injector = new RollCallInjector();
 
 		for(Department d: departments) 
+			taskManager.giveTask(injector.getNewTask(d));
+	}
+	
+	private void logDepartmentEmployees(CarDealer dealership) {
+		List<Department> departments = dealership.getDepartments();
+		ManagementTaskInjector injector = new LogDepartmentEmployeesInjector();
+
+		for(Department d: departments)
 			taskManager.giveTask(injector.getNewTask(d));
 	}
 	
@@ -105,29 +114,6 @@ public class DealerManagement implements Observer, Loggable{
 			if(workingDay.closingTimeSeconds() > lastClosingTime) 
 				lastClosingTime = workingDay.closingTimeSeconds();
 		}
-//		System.out.println("Opening time: Old = " + firstOpeningTime + " New = " + workingDay.openingTimeSeconds()); 	// TODO - Log
-//		System.out.println("Closing time: Old = " + lastClosingTime + " New = " + workingDay.closingTimeSeconds());		// TODO - Log
-	}
-
-	/*
-	 *  Open a dealer.
-	 */
-	private void openDealership(DealerWorkingDay workingDay, CarDealer carDealer) {
-		AtomicTaskInjector injector = new OpenDealershipInjector();
-		AtomicTask task = injector.getNewTask(null);
-
-		taskManager.giveTask(task);
-		workingDay.openForBusiness(OpeningHours.OPEN);
-	}
-
-	/*
-	 *  Close a dealer.
-	 */
-	private void closeDealership(DealerWorkingDay workingDay, CarDealer carDealer) {
-		AtomicTaskInjector injector = new CloseDealershipInjector();
-		AtomicTask task = injector.getNewTask(null);
-		taskManager.giveTask(task);
-		workingDay.openForBusiness(OpeningHours.CLOSED);
 	}
 	
 	/*
@@ -139,28 +125,34 @@ public class DealerManagement implements Observer, Loggable{
 			DealerWorkingDay workingDay = carDealer.getWorkingDay() ;
 			boolean inBusinessHours = workingDay.checkOpeningHours(timer.time());
 			
-			// Check to see if the business should be open or closed.
 			if(inBusinessHours) {
 				// Should be open. If it's not, open it.
-				if(workingDay.openForBusiness() == OpeningHours.CLOSED) {
-					openDealership(workingDay, carDealer);
-				}
+				if(workingDay.openForBusiness() == OpeningHours.CLOSED) 
+					openOrCloseDealer(new OpenDealershipInjector(), OpeningHours.OPEN, carDealer);
 			}else {
 				// Should be closed. If it's not, close it.
-				if(workingDay.openForBusiness() == OpeningHours.OPEN) {
-					closeDealership(workingDay, carDealer);
-				}
+				if(workingDay.openForBusiness() == OpeningHours.OPEN)
+					openOrCloseDealer(new CloseDealershipInjector(), OpeningHours.CLOSED, carDealer);
 			}
 		}
 	}
-	
+
 	/*
-	 *  Close any dealers that are open.
+	 * Open or close a dealer.
+	 */
+	private void openOrCloseDealer(ManagementTaskInjector injector, Boolean openingHours, CarDealer carDealer) {
+		ManagementTask task = injector.getNewTask(carDealer.getDealerDAO());
+		task.executeTask();
+		carDealer.getWorkingDay().openForBusiness(openingHours);
+	}
+
+	/*
+	 *  Force any dealers that are open to close.
 	 */
 	private void forceClosureOfDealers() {
 		for (CarDealer carDealer : dealerList)
 			if(carDealer.getWorkingDay().openForBusiness()) 
-				closeDealership(carDealer.getWorkingDay(), carDealer);
+				openOrCloseDealer(new CloseDealershipInjector(), OpeningHours.CLOSED, carDealer);
 	}
 
 	/*
@@ -183,11 +175,6 @@ public class DealerManagement implements Observer, Loggable{
 			default:
 				break;
 			}
-	}
-	
-	// TODO - Test purposes?
-	public CarDealer getFirstDealer() {
-			return dealerList.get(0);
 	}
 		
 	public CarDealer getDealerByName(String dealerName) {

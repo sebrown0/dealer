@@ -46,7 +46,7 @@ public class CarDealer implements Taskable, Loggable {
 		
 	public Department getDepartmentByName(String deptName) {
 		for (Department d : departments) 
-			if(d.departmentDetails().getDeptName().equals(deptName))
+			if(d.getDepartmentDetails().getDeptName().equals(deptName))
 				return d;
 		return null;
 	}

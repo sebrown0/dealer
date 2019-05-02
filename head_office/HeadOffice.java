@@ -50,15 +50,12 @@ public class HeadOffice implements Observer {
 				this);								// Register us as an observer of the timer.
 		 
 		timer.startTimer();
-		log = LogHelper.logInstance(true, timer); 			// A new log to begin the day.
+		log = LogHelper.logInstance(true, timer); 	// A new log to begin the day.
 
-		// Get a TaskManager to deal with all tasks for a dealer.
-		taskManager = new TaskManager(timer, new FastHeartbeat("Head Office Task Manager"), log);
-		
-		dealershipManagement = new DealerManagement(timer, taskManager, log);//, this);
-		
+		taskManager = new TaskManager(timer, new FastHeartbeat("Head Office Task Manager"), log);		
+		dealershipManagement = new DealerManagement(timer, taskManager, log);
 		headOffice.registerObserver(taskManager);
-		headOffice.registerObserver(dealershipManagement); // THIS SHOULD BE A DEALER!!!!!!!!!!!!!
+		headOffice.registerObserver(dealershipManagement); 
 
 	}
 	
@@ -86,32 +83,6 @@ public class HeadOffice implements Observer {
 		switch (msg) {
 		case CHANGED:
 			headOffice.notifyObservers(ObserverMessage.DO_WORK);
-
-			// TODO - Test below.
-//			System.out.println("-->>>" + headOffice.numberOfObservers());
-//			i++;
-//			if(i == 1)
-//				dealershipManagement.createNewDealer(new FranchiseBuilder() {
-//				}, "Ford", new FranchiseDealerWorkingDay(new Time(9, 00, 00), new Time(9, 00, 04)));
-			
-//			if(i == 2)
-//				dealershipManagement.createNewDealer(new MainDealerBuilder() {
-//				}, "VW", new MainDealerWorkingDay(new Time(9, 00, 00), new Time(9, 00, 7)));
-			
-//			if(i == 3)
-//				dealershipManagement.createNewDealer(
-//						new MainDealerBuilder() {},
-//						"Fiat", 
-//						new MainDealerWorkingDay(new Time(9, 00, 00), new Time(9, 00, 9)),
-//						new DealerObjects(
-//								new MySqlDB(log), 
-//								new Spark("Fiat", "local", true, log), 
-//								timer, 
-//								log, 
-//								new TaskManager(timer, new FastHeartbeat("Fiat Task Manager"), log))	 
-//						);
-			// TODO - End of test. 		
-
 			break;
 
 		case STOPPING:
@@ -121,7 +92,6 @@ public class HeadOffice implements Observer {
 		default:
 			break;
 		}
-
 	}
 	
 	public Log appLog() {
