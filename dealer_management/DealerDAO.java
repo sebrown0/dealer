@@ -4,7 +4,7 @@ import dao.DatabaseDAO;
 import dao.SparkSessionDAO;
 import task_scheduler.Manager;
 import timer.Timer;
-import utils.Log;
+import utils.logger.Log;
 
 public interface DealerDAO {
 

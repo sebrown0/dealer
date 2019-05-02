@@ -6,7 +6,7 @@ package dealer_management;
 import dealer.CarDealer;
 import dealer_working_day.DealerWorkingDay;
 import main_dealer.MainDealer;
-import utils.Loggable;
+import utils.logger.Loggable;
 
 /**
  * @author Steve Brown

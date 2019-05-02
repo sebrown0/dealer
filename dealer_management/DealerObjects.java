@@ -7,7 +7,7 @@ import task_scheduler.Manager;
 import task_scheduler.TaskManager;
 import timer.Timer;
 import timer.Timers;
-import utils.Log;
+import utils.logger.Log;
 
 /**
  * @author Steve Brown

@@ -10,7 +10,7 @@ import main_dealer.MainDealer;
 import tasks.task_status.Taskable;
 import tasks.task_status.TasksStatus;
 import timer.Timer;
-import utils.Loggable;
+import utils.logger.Loggable;
 
 /*
  *  @author Steve Brown.

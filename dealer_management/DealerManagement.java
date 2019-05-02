@@ -20,8 +20,8 @@ import tasks.task_injectors.OpenDealershipInjector;
 import tasks.task_injectors.RollCallInjector;
 import tasks.task_super_objects.ManagementTask;
 import timer.Timer;
-import utils.Log;
-import utils.Loggable;
+import utils.logger.Log;
+import utils.logger.Loggable;
 
 /**
  * @author Steve Brown

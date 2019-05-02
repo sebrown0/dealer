@@ -16,9 +16,9 @@ import time.MutableTime;
 import timer.SlowTimer;
 import timer.Timer;
 import timer.TimerDurationSeconds;
-import utils.Log;
-import utils.Logger.LogHelper;
-import utils.Simulator;
+import utils.logger.Log;
+import utils.logger.Logger.LogHelper;
+import utils.simulator.Simulator;
 
 /**
  * @author Steve Brown

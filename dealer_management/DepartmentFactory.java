@@ -22,8 +22,8 @@ import enums.ErrorCodes;
 import enums.HRDeptSP;
 import tasks.task_helper.CreateEmployee;
 import tasks.task_helper.CreateEmployeeHelper;
-import utils.Log;
-import utils.Loggable;
+import utils.logger.Log;
+import utils.logger.Loggable;
 
 /**
  * @author Steve Brown
