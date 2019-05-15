@@ -49,10 +49,8 @@ public class DepartmentFactory implements Loggable {
 		ErrorCodes errorCode = ErrorCodes.NONE;
 		Log log = dealerDAO.getLog(); 
 	
-		dealerDAO.getDatabase().dbConnect(); // TODO - Drop DB connection when finished.
-
 		// Use a stored procedure to get the departments.
-		StoredProcedure sp = new StoredProcedure(HRDeptSP.GET_DEPARTMENTS.value(), dealerDAO.getDatabase().dbConnection(), log);
+		StoredProcedure sp = new StoredProcedure(HRDeptSP.GET_DEPARTMENTS.value(), log, dealerDAO.getDatabase().getDbConnection());
 		sp.execute();
 
 		if (sp.errorCode() == ErrorCodes.NONE) {
@@ -101,7 +99,7 @@ public class DepartmentFactory implements Loggable {
 						departmentList.add(buildDepartment(aDepartment, deptDetails, dealerDAO));	
 				}
 			} else {
-				errorCode = ErrorCodes.UNKNOWN_ERROR; // TODO - Error code
+				errorCode = ErrorCodes.UNKNOWN_ERROR; 
 				log.logEntry(this, errorCode.eCode());
 			}
 		}

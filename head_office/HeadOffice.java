@@ -86,6 +86,7 @@ public class HeadOffice implements Observer {
 			break;
 
 		case STOPPING:
+			System.out.println("STOPPINGSTOPPINGSTOPPINGSTOPPINGSTOPPINGSTOPPINGSTOPPINGSTOPPINGSTOPPINGSTOPPINGSTOPPING");
 			headOffice.notifyObservers(ObserverMessage.STOPPING);
 			break;
 			
