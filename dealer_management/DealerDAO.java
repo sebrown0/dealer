@@ -2,7 +2,6 @@ package dealer_management;
 
 import dao.DatabaseDAO;
 import dao.SparkSessionDAO;
-import task_scheduler.Manager;
 import timer.Timer;
 import utils.logger.Log;
 
@@ -15,7 +14,4 @@ public interface DealerDAO {
 	Timer getTimer();
 
 	Log getLog();
-
-	Manager getTaskManager();
-
 }
