@@ -3,7 +3,7 @@ package dealer_management;
 
 import dao.DatabaseDAO;
 import dao.SparkSessionDAO;
-import task_scheduler.TaskManager;
+import tasks.scheduler.TaskManager;
 import timer.Timer;
 import utils.logger.Log;
 

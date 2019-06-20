@@ -7,8 +7,6 @@ import dealer_working_day.DealerWorkingDay;
 import departments.department.Department;
 import franchise.FranchiseDealer;
 import main_dealer.MainDealer;
-import tasks.task_status.Taskable;
-import tasks.task_status.TasksStatus;
 import timer.Timer;
 import utils.logger.Loggable;
 
@@ -21,7 +19,7 @@ import utils.logger.Loggable;
  *  
  *  Contains a helper class to access an instance of a dealership.
  */
-public class CarDealer implements Taskable, Loggable {
+public class CarDealer implements Loggable {
 		
 	private String name = "";
 	private DealerWorkingDay workingDay = null;
@@ -38,12 +36,7 @@ public class CarDealer implements Taskable, Loggable {
 		this.dealerDAO = dealershipBuilder.dealerDAO;
 		this.timer = dealershipBuilder.dealerDAO.getTimer();
 	}
-	
-	@Override
-	public void taskUpdate(TasksStatus s) {
-		dealerDAO.getLog().logEntry(this, "Completed Task = " + s.taskStatus() + " - Task ID = " + s.taskStatus());
-	}
-		
+			
 	public Department getDepartmentByName(String deptName) {
 		for (Department d : departments) 
 			if(d.getDepartmentDetails().getDeptName().equals(deptName))

@@ -11,7 +11,7 @@ import observer.GenericSubject;
 import observer.Observer;
 import observer.ObserverMessage;
 import observer.Subject;
-import task_scheduler.TaskManager;
+import tasks.scheduler.TaskManager;
 import time.MutableTime;
 import timer.SlowTimer;
 import timer.Timer;
@@ -38,7 +38,7 @@ public class HeadOffice implements Observer {
 	 *  Initialises HeadOffice.
 	 *  	1. Creates a new log file.
 	 *  	2. Creates a new timer. This is used throughout the app as the current time.
-	 *  	3. Gets a TaskManager - TODO remove
+	 *  	3. Creates a TaskManager.
 	 */
 	public void initialise(MutableTime time, TimerDurationSeconds duration) {
 				
